@@ -1,0 +1,5 @@
+lib/udev/rules.d
+lib/udev
+usr/bin
+usr/sbin
+var/lib/alsa

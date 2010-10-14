@@ -1,0 +1,54 @@
+From: David B. Harris <david@eelf.ddts.net>
+Subject: Move asound.state location to /var/lib/alsa/
+
+
+Index: alsa-utils-1.0.21/alsaconf/alsaconf.in
+===================================================================
+--- alsa-utils-1.0.21.orig/alsaconf/alsaconf.in	2009-08-31 17:13:36.000000000 +0200
++++ alsa-utils-1.0.21/alsaconf/alsaconf.in	2009-09-04 22:19:32.000000000 +0200
+@@ -956,8 +956,8 @@
+ 	  aplay -N $TESTSOUND
+       fi
+     fi
+-    if [ ! -r /etc/asound.state ]; then
+-	xecho "Saving the mixer setup used for this in /etc/asound.state."
++    if [ ! -r /var/lib/alsa/asound.state ]; then
++	xecho "Saving the mixer setup used for this in /var/lib/alsa/asound.state."
+ 	$sbindir/alsactl store
+     fi
+     clear
+Index: alsa-utils-1.0.21/alsactl/alsactl.1
+===================================================================
+--- alsa-utils-1.0.21.orig/alsactl/alsactl.1	2009-08-31 17:13:36.000000000 +0200
++++ alsa-utils-1.0.21/alsactl/alsactl.1	2009-09-04 22:19:32.000000000 +0200
+@@ -43,7 +43,7 @@
+ 
+ .TP
+ \fI\-f, \-\-file\fP
+-Select the configuration file to use. The default is /etc/asound.state.
++Select the configuration file to use. The default is /var/lib/alsa/asound.state.
+ 
+ .TP
+ \fI\-F, \-\-force\fP
+@@ -90,7 +90,7 @@
+ is used.
+ 
+ .SH FILES
+-\fI/etc/asound.state\fP (or whatever file you specify with the
++\fI/var/lib/alsa/asound.state\fP (or whatever file you specify with the
+ \fB\-f\fP flag) is used to store current settings for your
+ soundcards. The settings include all the usual soundcard mixer
+ settings.  More importantly, alsactl is
+Index: alsa-utils-1.0.21/alsactl/alsactl.c
+===================================================================
+--- alsa-utils-1.0.21.orig/alsactl/alsactl.c	2009-08-31 17:13:36.000000000 +0200
++++ alsa-utils-1.0.21/alsactl/alsactl.c	2009-09-04 22:19:32.000000000 +0200
+@@ -30,7 +30,7 @@
+ #include <alsa/asoundlib.h>
+ #include "alsactl.h"
+ 
+-#define SYS_ASOUNDRC "/etc/asound.state"
++#define SYS_ASOUNDRC "/var/lib/alsa/asound.state"
+ 
+ int debugflag = 0;
+ int force_restore = 1;
