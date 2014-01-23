@@ -1,3 +1,158 @@
+alsa-utils (1.0.25-4) unstable; urgency=low
+
+  * Remove debian/set-default-soundcard which hasn't been installed since
+    1.0.10rc1-1, in 2005.
+  * Restore the installation of the upstream udev rules file.
+  * Drop debian/udev.{rules,script} entirely and just rely on upstream's
+    simpler udev rule file. Our rules were wrong or pointless.
+  * udev_test_alsactl.patch: include a TEST=="/usr/sbin/alsactl" in the
+    upstream udev rule, to properly fix the state restoring for users
+    with split /usr filesystems (really addresses: #670490).
+    Many thanks to Michael Biebl for analysis and proposed fix.
+  * Stop removing /lib/udev/rules.d stuff on purge, as that is dpkg-owned.
+
+ -- Jordi Mallach <jordi@debian.org>  Thu, 10 Jan 2013 01:54:13 +0100
+
+alsa-utils (1.0.25-3) unstable; urgency=low
+
+  * Handle addition and removal of soundcards, so sound levels are
+    restored. Thanks Vincent Bernat for the suggestion (closes: #670490).
+  * Replace hardcoded configure call with dh_auto_configure, and remove
+    default flags handled by debhelper.
+  * Bump Standards-Version to 3.9.3, with no changes needed.
+  * Drop dependency on linux-sound-base: it is going away, and was only
+    required for alsaconf's black magic.
+
+ -- Jordi Mallach <jordi@debian.org>  Sun, 20 May 2012 02:59:16 +0200
+
+alsa-utils (1.0.25-2) unstable; urgency=low
+
+  [ Jordi Mallach ]
+  * Depend on kmod, not module-init-tools (thanks, Markus Waldeck).
+    (Closes: #666065)
+
+  [ Martin Pitt ]
+  * debian/control: Remove myself from Uploaders:, I'm not really
+    co-maintaining this package.
+
+  [ Elimar Riesebieter ]
+  * Make sure switch_control "Audigy Analog/Digital Output Jack" isn't set to on
+    in /usr/share/alsa/utils.sh. (Closes: #667743)
+
+ -- Jordi Mallach <jordi@debian.org>  Thu, 12 Apr 2012 09:47:01 +0200
+
+alsa-utils (1.0.25-1) unstable; urgency=low
+
+  * New upstream release.
+  * Update debian/changelog.ALSA.
+  * Drop alsamixer_libxch1.patch, accepted upstream.
+  * Drop speaker-test.1_improvements.patch, applied upstream.
+  * Drop aplay_interactive.patch, applied upstream.
+  * Build-Depend on libasound2-dev (>= 1.0.25).
+  * Remove obsolete PATCHES.Debian.
+  * Use watch file version 3, and don't uupdate.
+  * Run source package through wrap-and-sort.
+  * Bump to debhelper 9.
+  * Rewrite rules using dh.
+  * Remove shebang from utils.sh. It is meant to be sourced.
+  * Update spelling_fixes.patch with new fix.
+  * Fix override file.
+
+ -- Jordi Mallach <jordi@debian.org>  Sun, 12 Feb 2012 02:10:57 +0100
+
+alsa-utils (1.0.24.2-5) unstable; urgency=low
+
+  [ Elimar Riesebieter ]
+  * Introduce alsamixer_libxch1.patch from upstream to fix a linking
+    clash for shutdown(). (Closes: #657342, #657538)
+
+ -- Jordi Mallach <jordi@debian.org>  Sat, 28 Jan 2012 15:37:07 +0100
+
+alsa-utils (1.0.24.2-4) unstable; urgency=low
+
+  [ Daniel T Chen ]
+  * debian/control: Add libsamplerate-dev build-dependency for alsaloop.
+    (LP: #868734)
+
+  [ Jordi Mallach ]
+  * Update Vcs-* fields to non-redirected URLs.
+
+ -- Jordi Mallach <jordi@debian.org>  Sat, 15 Oct 2011 00:21:19 +0200
+
+alsa-utils (1.0.24.2-3) unstable; urgency=low
+
+  [ Elimar Riesebieter ]
+  * Remove alsactl's native installed udev rule. Hopefully closes: #636437
+    really now.
+
+ -- Jordi Mallach <jordi@debian.org>  Fri, 09 Sep 2011 01:44:22 +0200
+
+alsa-utils (1.0.24.2-2) unstable; urgency=low
+
+  [ Jordi Mallach ]
+  * Add aplay_interactive.patch from Takashi Iwai to revert a behaviour
+    change in aplay which broke festival and possibly other scripts, while
+    retaining the new interactive functionality via a new -i option
+    (closes: #638369).
+
+  [ Elimar Riesebieter ]
+   * Don't install udev rules. It is not needed to run alsactl. Instead make
+     init depend on "mountall" to make sure /usr and /var is mounted for
+     running alsactl.  (Closes: #636437)
+   * Added "build-arch: build ; build-indep: build" to rules to satisfy lintian.
+   * Install utils.sh executable
+
+ -- Jordi Mallach <jordi@debian.org>  Mon, 05 Sep 2011 22:11:57 +0200
+
+alsa-utils (1.0.24.2-1) unstable; urgency=low
+
+  * New upstream release.
+    - allows control of "Auto-Mute Mode" (see #631963).
+  * Pass --disable-alsaconf to configure to disable alsaconf in a sane way.
+  * Replace move_asound_state_to_var.patch with --with-asound-state-dir.
+  * Bump Build-Depends on alsa-lib to >= 1.0.24.1, for alsa/use-case.h.
+    You would expect configure.in checks for this, right?
+  * Bump to debhelper compat v8.
+  * Tweak description.
+  * Drop unneeded README.source.
+  * Add patch from Javi Fernández-Sanguino Peña to improve the
+    speaker-test(1) manpage with usage examples. Thanks! Closes: #620513.
+  * Define _GNU_SOURCE to fix a build failure in alsaloop.
+  * Avoid having the same short description for the main and udeb packages.
+
+ -- Jordi Mallach <jordi@debian.org>  Tue, 26 Jul 2011 13:10:03 +0200
+
+alsa-utils (1.0.23-5) unstable; urgency=low
+
+  [ Jordi Mallach ]
+  * Switch to architecture wildcard 'linux-any'.
+
+  [ Elimar Riesebieter ]
+  * Provide alsa-utils-udeb based on a patch from Samuel Thibault. Thanks.
+    (closes: #613103)
+  * unmute_and_set_level "Master Front" "80%". Thanks Samuel Thibault. 
+    (closes: #617347)
+
+  [ Jordi Mallach ]
+  * Add Section: debian-installer to new udeb.
+  * Remove obsolete conflicts.
+  * Bump Standards-Version to 3.9.2 (no further changes). 
+
+ -- Jordi Mallach <jordi@debian.org>  Tue, 03 May 2011 13:58:35 +0200
+
+alsa-utils (1.0.23-4) unstable; urgency=low
+
+  [ Elimar Riesebieter ]
+  * Update the alsa-utils init script to use POSIX command substitution $()
+    instead of backtics (``). Thanks Jari Aalto. (closes: #602020)
+  * unmute_and_set_level "LFE" "80%" for MacBook5,2 (closes: #602973)
+  * unmute_and_set_level "Speaker" "80%" for Intel 82801H. Thanks to Attila
+    Hammer for testing. (closes: #603550)
+  * Added armhf to the supported archs. (closes: #604650, #623183)
+  * Bumped Standards-Version to 3.9.1. No changes
+
+ -- Jordi Mallach <jordi@debian.org>  Mon, 18 Apr 2011 19:55:33 +0200
+
 alsa-utils (1.0.23-3) unstable; urgency=low
 
   [ Elimar Riesebieter ]

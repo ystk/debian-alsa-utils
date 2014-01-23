@@ -1,3 +1,139 @@
+Changelog between 1.0.24 and 1.0.25 releases
+(http://www.alsa-project.org/main/index.php/Changes_v1.0.24_v1.0.25)
+(Reformated as ASCII text)
++++++++++++++++++++++++++++++++++++++++++++
+
+* alsa-utils
+  +  Core
+     Release v1.0.25 
+     alsactl: add support for recreating enumerated user controls 
+     fix use of $(SED) 
+     Updated COPYING with the recent FSF address 
+     Release v1.0.24.2 
+     Release v1.0.24.1 
+
+  +  ALSA Control (alsactl)
+     Alsa-utils: Fix typo causing some volumes not to be initialized 
+     alsactl: Initialize Front Speaker, etc 
+     alsactl: add support for recreating enumerated user controls 
+     fix use of $(SED) 
+     Revert "alsactl - Display help for names command" 
+     alsactl init: Mute CD Playback volume by default 
+
+  +  Speaker Test
+     speaker-test.1: Clarify man page by giving examples 
+
+  +  alsaconf
+     fix use of $(SED) 
+
+  +  alsaloop
+     alsaloop: Use AM_CFLAGS in Makefile.am 
+     alsaloop: another try to force correct formats for libsamplerate 
+     alsaloop: libsamplerate requires specific formats, force them for slave mode 
+
+  +  alsamixer
+     alsamixer: Fix X-win related crash for PulseAudio plugin (bad linking) 
+     alsamixer: Fix 64bit issues 
+     alsamixer: fix build on uClibc 
+     alsamixer: fix display of active/inactive controls 
+
+  +  alsaucm
+     alsaucm: Don't double-free empty lists 
+     alsaucm: Add list1 command for non-tuple lists 
+     alsaucm: do not bail out in the interactive mode upon error 
+     alsaucm: fix interactive mode, add batch mode 
+     alsaucm: fix list command and output 
+
+  +  amixer
+     alsa-utils: amixer: Fix SND_CTL_TLVT_DB_RANGE handling 
+
+  +  aplay/arecord
+     aplay: Fix spelling error 
+     aplay: increase channel limit to 256 
+     aplay: Use standard endian convesions 
+     aplay: Add include files for mkdir() 
+     aplay: Avoid recursive signal handling 
+     aplay: Add -i option for interactive mode 
+
+  +  aplaymidi/arecordmidi
+     aplaymidi: clarify multi-port documentation 
+
+Changelog between 1.0.23 and 1.0.24 releases
+(http://www.alsa-project.org/main/index.php/Changes_v1.0.23_v1.0.24)
+(Reformated as ASCII text)
++++++++++++++++++++++++++++++++++++++++++++
+
+* alsa-utils
+  +  Core
+          Release v1.0.24
+          configure.in: Fix xmlto detection
+          alsactl: Add a --with-udev-rules-dir configure option.
+          configure.in: Fix variable name
+          alsactl: Move asound.state location to /var/lib/alsa
+          alsactl: systemd and udev hookup
+          Introduce alsaloop utility
+          alsaucm: Add Use Case Manager utility
+          Revert wrong parts of "alsactl: use snd_config_imake* functions"
+          alsactl: use snd_config_imake* functions
+  +  ALSA Control (alsactl)
+          alsactl: Add a --with-udev-rules-dir configure option.
+          alsactl: Move asound.state location to /var/lib/alsa
+          alsactl: systemd and udev hookup
+          alsactl init: Initialize also "Master Front Playback Volume" & "Switch"
+          alsactl init: Handle "Capture Source" and "Mic Boost" in the default script
+          alsactl: Change handling of inactive controls
+          alsactl init: use "generic method" instead "guess method"
+          alsactl init: Use "Found hardware:" instead "Unknown hardware:"
+          Revert wrong parts of "alsactl: use snd_config_imake* functions"
+          alsactl: change format of comment node in state file
+          alsactl: correctly restore dB values of controls with changed range
+          alsactl: remove open-coded search
+          alsactl: move alloca out of loop
+          alsactl: use snd_config_imake* functions
+  +  Speaker Test
+          speaker-test: Don't retry after fatal errors
+          speaker-test: add test pattern for PCM layer debugging purposes
+  +  aconnect
+          Revert wrong parts of "alsactl: use snd_config_imake* functions"
+          alsactl: use snd_config_imake* functions
+  +  alsaconf
+          alsactl: Move asound.state location to /var/lib/alsa
+  +  alsaloop
+          alsaloop: rework the ctl event handling routine
+          alsaloop: Delay the restart a bit (to handle snd-aloop playback xruns better)
+          alsaloop: Fix latency print
+          alsaloop: fixes, added -W/--wake option
+          alsaloop: add -U/--xrun to alsaloop.1 man page
+          alsaloop: added xrun profiling support (-U,--xrun), added SIGUSR1 state dump
+          alsaloop: add --pctl and --cctl options to man page
+          alsaloop: add --pctl and --cctl options
+          alsaloop: Fixes and added --workaround option
+          alsaloop: Fix command-line parsing and pollfd initialization
+          alsaloop: Add OSS mixer redirection support
+          alsaloop: added resampling for unsupported soundcard rates
+          alsaloop: fix resample argument parsing
+          alsaloop: fix -a option and slave mode processing
+          alsaloop: Fix thread handling
+          alsaloop: Fix loopbacks pointer initialization and allocation, fix -T option
+          Introduce alsaloop utility
+  + alsamixer
+          alsamixer: use cubic scale for volume bars
+          alsamixer: increase step size for big control value ranges
+          alsamixer: remove obsolete e-mail
+          alsamixer: remove obsolete e-mail
+  +  alsaucm
+          alsaucm: fix command line arguments parsing
+          ucm: added listcards command
+          alsaucm: initial rewrite to use update API
+          alsaucm: Report failure to set a device due to missing verb setup
+          alsaucm: Add Use Case Manager utility
+  +  amixer
+          amixer: fix parsing of control ID name
+  +  aplay/arecord
+          aplay/arecord: term_c_lflag variable might be unitialized in some cases
+          aplay: fix termio settings - return back old c_flag value on exit
+          aplay/arecord: Added hardware pause support (press SPACE or Enter)
+
 Changelog between 1.0.22 and 1.0.23 releases
 (http://www.alsa-project.org/main/index.php/Changes_v1.0.22_v1.0.23)
 (Reformated as ASCII text)

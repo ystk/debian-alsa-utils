@@ -1,4 +1,4 @@
 aseqnet_manpage_errors.patch
-move_asound_state_to_var.patch
 spelling_fixes.patch
 fix_misspelling_speaker-test_man_page.patch
+udev_test_alsactl.patch

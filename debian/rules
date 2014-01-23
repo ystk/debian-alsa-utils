@@ -1,92 +1,21 @@
 #!/usr/bin/make -f
+%:
+	dh $@
 
-#include /usr/share/quilt/quilt.make
+override_dh_auto_configure:
+	dh_auto_configure -- \
+			--with-asound-state-dir=/var/lib/alsa \
+			--disable-alsaconf
 
-CFLAGS = -Wall -g
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/tmp
 
-INSTALL_UAG := -o root -g audio
+# Kill *.la files, and make sure we install everything else
+override_dh_install:
+	dh_install -Xusr/share/man/fr --fail-missing
 
-# These are used for cross-compiling and for saving the configure script
-# from having to guess our platform (since we know it already)
-DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-else
-	CFLAGS += -O2
-endif
-
-clean:
-	dh_testdir
-	dh_clean
-	[ ! -f Makefile ] || $(MAKE) distclean
-	-rm -f version
-	-rm -f configure-stamp build-stamp
-	-rm -f config.cache config.log config.status Makefile.conf
-	-rm -f config.sub config.guess
-	-rm -f aplay/arecord
-
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	-rm -f config.sub config.guess
-	ln -s /usr/share/misc/config.sub config.sub
-	ln -s /usr/share/misc/config.guess config.guess
-	./configure --prefix=/usr \
-		    --mandir=\$${prefix}/share/man \
-		    --infodir=\$${prefix}/share/info \
-		    --host=$(DEB_HOST_GNU_TYPE) \
-		    --build=$(DEB_BUILD_GNU_TYPE)
-	touch configure-stamp
-
-build: configure build-stamp
-build-stamp:
-	$(MAKE) CFLAGS='$(CFLAGS)'
-	touch build-stamp
-
-install: DH_OPTIONS=
-install: build
-	dh_testdir
-	dh_testroot
-	dh_prep
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/alsa-utils
-	rm -f debian/alsa-utils/usr/share/man/fr/man8/alsaconf.8
-	rmdir debian/alsa-utils/usr/share/man/fr/man8
-	rmdir debian/alsa-utils/usr/share/man/fr
-
-	# Don't install alsaconf
-	rm -f debian/alsa-utils/usr/sbin/alsaconf
-	rm -f debian/alsa-utils/usr/share/man/man8/alsaconf*
-	rm -f debian/alsa-utils/usr/share/locale/*/LC_MESSAGES/alsaconf*
-
-binary-indep:
-binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installdirs
-	install $(INSTALL_UAG) -m644 debian/udev.rules \
-		debian/alsa-utils/lib/udev/rules.d/80-alsa.rules
-	install $(INSTALL_UAG) -m755 debian/udev.script \
-		debian/alsa-utils/lib/udev/alsa-utils
-	dh_link
-	DH_OPTIONS= dh_installinit --no-start -- start 50 S . stop 50 0 1 6 .
-	#dh_installinit
-	dh_installdocs
-	dh_installman
-	cp debian/PATCHES.Debian \
-		debian/alsa-utils/usr/share/doc/alsa-utils/
+override_dh_installchangelogs:
 	dh_installchangelogs debian/changelog.ALSA
-	dh_installmenu
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
 
-binary:	binary-indep binary-arch
-.PHONY: build clean binary binary-arch binary-indep install configure
+override_dh_installinit:
+	DH_OPTIONS= dh_installinit --no-start -- start 50 S . stop 50 0 1 6 .
