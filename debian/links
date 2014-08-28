@@ -1,2 +1,3 @@
-/usr/bin/aplay /usr/bin/arecord
-/usr/share/man/man1/aplay.1.gz /usr/share/man/man1/arecord.1.gz
+dev/null			lib/systemd/system/alsa-utils.service
+usr/bin/aplay			usr/bin/arecord
+usr/share/man/man1/aplay.1.gz	usr/share/man/man1/arecord.1.gz

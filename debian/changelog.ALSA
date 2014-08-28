@@ -1,3 +1,241 @@
+Changelog between 1.0.27.1 and 1.0.28 releases
+(http://www.alsa-project.org/main/index.php/Changes_v1.0.27.1_v1.0.28)
+(Reformated as ASCII text)
++++++++++++++++++++++++++++++++++++++++++++
+
+* alsa-utils
+
+  * Core
+    Release v1.0.28
+    alsactl: Do not run udev rule before datadir/sbindir are both mounted
+    configure.ac: cosmetic change
+    Modernize configure.ac
+    configure.in -> configure.ac rename
+    Makefiles - use AM_CPPFLAGS instead INCLUDES
+    configure: add --with-lock-dir option
+    configure: detect udevdir via pkg-config, fallback to /lib/udev/rules.d
+
+  * /include/Makefile.am
+    configure.in -> configure.ac rename
+
+  * ALSA Control (alsactl)
+    alsactl: Fixup test for mydatadir/sbindir
+    alsactl: Do not run udev rule before datadir/sbindir are both mounted
+    alsactl: add -L (no-lock) and change -D (lock-dir) to -O (state-lock-file)
+    configure: add --with-lock-dir option
+    alsactl: Store lockfile in /var/lock, add -D option to specify the lock dir
+    alsa-restore.rules: refer to correct attr
+    alsactl: Fix the va_list initialization in cerror_() and dbg_()
+    alsactl: monitor all cards as default
+    alsactl: Fix REMOVE event handling in monitor command
+    alsactl: Add monitor command
+    alsactl: alsa-state.service - fix typo (rkill -> kill)
+
+  * ALSA RawMidi Utility (amidi)
+    Makefiles - use AM_CPPFLAGS instead INCLUDES
+
+  * Speaker Test
+    speaker-test: update man page for new -X arg, also consistency fixes
+    speaker-test: add --force-frequency option to allow hz outside range
+    speaker-test: Show out-of-chmap channels as Unknown
+    speaker-test: Always show chmap channel names if available
+    speaker-test: Fix chmapped channel selection without specified chmap
+
+  * aconnect
+    fix aconnect -l option
+
+  * alsaconf
+    alsaconf: update gentoo to use modprobe.d method as everyone else
+    alsaconf: support newer m-i-t and kmod
+
+  * alsaloop
+    Makefiles - use AM_CPPFLAGS instead INCLUDES
+    alsaloop: pcmjob.c: use portable way to initialize recursive mutex
+    alsaloop: add -z,--syslog option to use syslog for errors
+    alsaloop: fix wrong alias for signal.h
+
+  * alsamixer
+    Makefiles - use AM_CPPFLAGS instead INCLUDES
+
+  * alsaucm
+    Makefiles - use AM_CPPFLAGS instead INCLUDES
+
+  * amixer
+    Makefiles - use AM_CPPFLAGS instead INCLUDES
+    amixer: fix indentation when printing container TLV contents
+    amixer: actually print all TLVs in a container TLV
+
+  * aplay/arecord
+    aplay: Fix VU-meter stdout/stderr mess
+    aplay/arecord: Add more in_aborting checks to read/write loops
+    aplay: fix timespec to msec conversion
+    aplay: fix pcm_read() return value
+    aplay: fix two off by one errors
+
+  * gitcompile
+    configure.in -> configure.ac rename
+
+Changelog between 1.0.27 and 1.0.27.1 releases
+(http://www.alsa-project.org/main/index.php/Changes_v1.0.27_v1.0.27.1)
+(Reformated as ASCII text)
++++++++++++++++++++++++++++++++++++++++++++
+
+* alsa-utils
+
+  + Core
+    Release v1.0.27.2 
+    Require alsa-lib 1.0.27. 
+
+  + ALSA Control (alsactl)
+    alsactl: return back the udevrules_DATA rule for 90-alsa-restore.rules 
+    alsactl init: ca0106 file was omitted 
+
+  + Speaker Test
+    speaker-test: Fix wrong wave file played back in chmap setup 
+
+  + amixer
+    amixer: Print TLV of channel map controls 
+    amixer: fix print_dB for -0.99 .. -0.01 range 
+    amixer: Fix the hctl elem search bug 
+
+Changelog between 1.0.27 and 1.0.27.1 releases
+(http://www.alsa-project.org/main/index.php/Changes_v1.0.27_v1.0.27.1)
+(Reformated as ASCII text)
++++++++++++++++++++++++++++++++++++++++++++
+
+* alsa-utils
+  + Core
+    Release v1.0.27.1
+    Add AM_MAINTAINER_MODE([enable]) to configure.in.
+
+  + ALSA Control (alsactl)
+    alsactl: remove 90-alsa-restore.rules from the tar ball
+    Fix a build failure due to a misused format string.
+    alsactl: sprintf to snprintf prevent buffer overflow
+    alsactl: Fix the string size for the lock file contents
+    alsactl: Fix a typo in systemd alsa-restore.service
+
+  + ALSA RawMidi Utility (amidi)
+    Several formatting fixes for manpages.
+
+  + Speaker Test
+    Several formatting fixes for manpages.
+    Fix several typos in manpage and help strings.
+
+  + alsaloop
+    Several formatting fixes for manpages.
+
+  + amixer
+    Several formatting fixes for manpages.
+
+  + aplay/arecord
+    Several formatting fixes for manpages.
+    Fix several typos in manpage and help strings.
+    arecord: add a missing break to the capture loop
+
+  + aseqnet
+    Fix several typos in manpage and help strings.
+
+  + iecset
+    Fix several typos in manpage and help strings.
+
+Changelog between 1.0.26 and 1.0.27 releases
+(http://www.alsa-project.org/main/index.php/Changes_v1.0.26_v1.0.27)
+(Reformated as ASCII text)
++++++++++++++++++++++++++++++++++++++++++++
+
+* alsa-utils
+  + Core
+    Release v1.0.27
+    alsactl: add --with-alsactl-daemonswitch=FILE to the global configure.in
+    alsactl: move systemd config to the daemon mode
+    configure: Fix obsolete AM_CONFIG_HEADER macro
+
+  + ALSA Control (alsactl)
+    alsactl: add --with-alsactl-daemonswitch=FILE to the global configure.in
+    alsactl: revert back old systemd static units with the /etc/alsa/state-daemon.conf switch
+    alsactl: add --nice and --sched-idle options
+    alsactl: daemon mode - remove disconnected cards
+    alsactl: move systemd config to the daemon mode
+    alsactl: add event filter and cache for the daemon mode
+    alsactl: Improved command line argument handling...
+    alsactl: add the daemon mode
+    alsactl: small code reorder to avoid memory leaks
+    alsactl: safe state store and memory allocation cleanups
+
+  + Speaker Test
+    speaker-test: change the interrupt handling logic to follow aplay/arecord
+    speaker-test: try to call snd_pcm_close() when a signal is received
+    speaker-test: increase the maximum supported rate to 384000
+    speaker-test: Update man page for chmap option
+    speaker-test: Add support for channel mapping API
+
+  + alsaloop
+    alsaloop: Fix missing #endif
+    alsaloop: Make alsaloop working without libsamplerate
+
+  + alsamixer
+    alsamixer: Use isatty() to check the terminal (interactive) availability
+    alsamixer: fix handling of removed controls
+
+  + amixer
+    amixer: Use the alsa-lib functions for id print and parse and value parse
+    amixer: Fix dB value outputs in amixer contents
+    amixer: Fix parsing container TLV entries
+    amixer: fix rounding of relative changes
+
+  + aplay/arecord
+    aplay/arecord: change the interrupt handling using snd_pcm_abort()
+    aplay/arecord: added isatty() check (interactive mode)
+    aplay: Add the support for big-endian WAV format (RIFX)
+    aplay: Show usage if no parameter is passed
+    aplay: fix typo & silence warning..
+    aplay: More support for channel map option
+    aplay: Add support for channel mapping
+
+Changelog between 1.0.25 and 1.0.26 releases
+(http://www.alsa-project.org/main/index.php/Changes_v1.0.25_v1.0.26)
+(Reformated as ASCII text)
++++++++++++++++++++++++++++++++++++++++++++
+
+* alsa-utils
+  + Core
+    Release v1.0.26
+    build: Don't call AC_CHECK_FUNC with --disable-alsatest
+    configure.in: use AS_HELP_STRING everywhere
+    configure.in: look for ncurses pkg-config first
+    Trivial fixes in INSTALL file
+
+  + ALSA Control (alsactl)
+    alsactl: Add reference to alsactl_init(7) in alsactl man page
+    alsactl: Read only *.conf files when a directory is passed via INCLUDE
+    alsactl: Do not access other cards than specified for init
+
+  + alsaloop
+    alsaloop: fix the avail_min setup
+    alsaloop: Improve xrun_sync - fill missing playback samples
+
+  + alsamixer
+    amixer, alsamixer: Add description of volume-mapping
+
+  + amixer
+    amixer, alsamixer: Add description of volume-mapping
+    amixer: Add the support for mapped volumes like alsamixer
+
+  + aplay/arecord
+    aplay: Use open() instead of open64()
+    aplay: Fix signal.h include
+    aplay: print vu-meter to stderr, not stdout
+    aplay/arecord: option to treat any xrun as fatal
+    aplay - option to dump HW parameters
+    Fix the examples in aplay.1
+
+  + aseqnet
+    aseqnet: Remove obsoleted .LO entry from man page
+
+  + cvscompile
+    Remove the cvscompile file
+
 Changelog between 1.0.24 and 1.0.25 releases
 (http://www.alsa-project.org/main/index.php/Changes_v1.0.24_v1.0.25)
 (Reformated as ASCII text)
@@ -5,58 +243,58 @@ Changelog between 1.0.24 and 1.0.25 releases
 
 * alsa-utils
   +  Core
-     Release v1.0.25 
-     alsactl: add support for recreating enumerated user controls 
-     fix use of $(SED) 
-     Updated COPYING with the recent FSF address 
-     Release v1.0.24.2 
-     Release v1.0.24.1 
+     Release v1.0.25
+     alsactl: add support for recreating enumerated user controls
+     fix use of $(SED)
+     Updated COPYING with the recent FSF address
+     Release v1.0.24.2
+     Release v1.0.24.1
 
   +  ALSA Control (alsactl)
-     Alsa-utils: Fix typo causing some volumes not to be initialized 
-     alsactl: Initialize Front Speaker, etc 
-     alsactl: add support for recreating enumerated user controls 
-     fix use of $(SED) 
-     Revert "alsactl - Display help for names command" 
-     alsactl init: Mute CD Playback volume by default 
+     Alsa-utils: Fix typo causing some volumes not to be initialized
+     alsactl: Initialize Front Speaker, etc
+     alsactl: add support for recreating enumerated user controls
+     fix use of $(SED)
+     Revert "alsactl - Display help for names command"
+     alsactl init: Mute CD Playback volume by default
 
   +  Speaker Test
-     speaker-test.1: Clarify man page by giving examples 
+     speaker-test.1: Clarify man page by giving examples
 
   +  alsaconf
-     fix use of $(SED) 
+     fix use of $(SED)
 
   +  alsaloop
-     alsaloop: Use AM_CFLAGS in Makefile.am 
-     alsaloop: another try to force correct formats for libsamplerate 
-     alsaloop: libsamplerate requires specific formats, force them for slave mode 
+     alsaloop: Use AM_CFLAGS in Makefile.am
+     alsaloop: another try to force correct formats for libsamplerate
+     alsaloop: libsamplerate requires specific formats, force them for slave mode
 
   +  alsamixer
-     alsamixer: Fix X-win related crash for PulseAudio plugin (bad linking) 
-     alsamixer: Fix 64bit issues 
-     alsamixer: fix build on uClibc 
-     alsamixer: fix display of active/inactive controls 
+     alsamixer: Fix X-win related crash for PulseAudio plugin (bad linking)
+     alsamixer: Fix 64bit issues
+     alsamixer: fix build on uClibc
+     alsamixer: fix display of active/inactive controls
 
   +  alsaucm
-     alsaucm: Don't double-free empty lists 
-     alsaucm: Add list1 command for non-tuple lists 
-     alsaucm: do not bail out in the interactive mode upon error 
-     alsaucm: fix interactive mode, add batch mode 
-     alsaucm: fix list command and output 
+     alsaucm: Don't double-free empty lists
+     alsaucm: Add list1 command for non-tuple lists
+     alsaucm: do not bail out in the interactive mode upon error
+     alsaucm: fix interactive mode, add batch mode
+     alsaucm: fix list command and output
 
   +  amixer
-     alsa-utils: amixer: Fix SND_CTL_TLVT_DB_RANGE handling 
+     alsa-utils: amixer: Fix SND_CTL_TLVT_DB_RANGE handling
 
   +  aplay/arecord
-     aplay: Fix spelling error 
-     aplay: increase channel limit to 256 
-     aplay: Use standard endian convesions 
-     aplay: Add include files for mkdir() 
-     aplay: Avoid recursive signal handling 
-     aplay: Add -i option for interactive mode 
+     aplay: Fix spelling error
+     aplay: increase channel limit to 256
+     aplay: Use standard endian convesions
+     aplay: Add include files for mkdir()
+     aplay: Avoid recursive signal handling
+     aplay: Add -i option for interactive mode
 
   +  aplaymidi/arecordmidi
-     aplaymidi: clarify multi-port documentation 
+     aplaymidi: clarify multi-port documentation
 
 Changelog between 1.0.23 and 1.0.24 releases
 (http://www.alsa-project.org/main/index.php/Changes_v1.0.23_v1.0.24)
@@ -564,96 +802,96 @@ Changelog between 1.0.10 and 1.0.11 releases
 * alsa-utils
   + Core
     - Add WAV file playback support to speaker-test
-      
+    
       Add WAV file playback support to speaker-test.
       The support is still limited to S16_LE, and doesn't refer to csv file yet.
   + ALSA Control (alsactl)
     - Remove obsolete power command from alsactl
-      
+    
       Remove obsolete power command from alsactl.
   + Speaker Test
     - Improve buffer/period set up in speaker-test
-      
+    
       Improve buffer/period set up in speaker-test.
-      
+    
       - Don't ignore -b and -p options but use them if specified
       - Clean up and improvement of messy buffer/period setup codes
       - Add -P option for specifying number of periods explicitly
     - Fix missing commas
-      
+    
       Fixed missing commas in array elements (ALSA bug#1938).
     - Add --nloops option and fix manpage
-      
+    
       - Added --nloops option to specify the number of loops
       - Fixed man page of speaker-test
     - Fix a typo in speaker-test help text
-      
+    
       Fix a typo in speaker-test help text.  Updated ja.po, too.
     - Make speaker-test compatible with dmix by default.
     - Avoid unnecessary drain/restart in speaker-test
-      
+    
       Avoid unnecessary drain/restart in speaker-test when the buffer
       is enough small.
     - speaker-test - Fix missing i18n
-      
+    
       Add the gettext tags to newly added texts.
     - speaker-test: Fix version reporting.
     - Tentative fix for speaker-test WAV with 5 or more channels
-      
+    
       Fix the WAV file name for center/lfe.  Use the existing
       "Rear_Center.wav" for LFE as a workaround.
     - Add missing comma
-      
+    
       Add a missing comma in the last fix...
     - Fix compile on big-endian arch
-      
+    
       Fix compile on big-endian arch.
     - Remove loops after errors
-      
+    
       Don't retry after fatal errors.
     - Add WAV file playback support to speaker-test
-      
+    
       Add WAV file playback support to speaker-test.
       The support is still limited to S16_LE, and doesn't refer to csv file yet.
   + alsaconf
     - Fix a text in alsa-utils
-      
+    
       Fix a text in alsa-utils after proof-reading.
     - Minor clean up of bashism
-      
+    
       Minor clean up of bashism, replaced with normal test.
     - Fix PCI class and name extraction in alsaconf
-      
+    
       - Allow all PCI class 04xx, not only 040x
       - Fix the extraction of device name from lspci output
-      
+    
       ALSA bug#1935
     - Use amixer -s option
-      
+    
       Optimize to use amixer with -s option.
   + amixer
     - amixer - Add -s option
-      
+    
       - Add -s option to read from stdin the command sequentially.
       - Suppress unneeded warnings in sset.
   + aplay/arecord
     - Fix a typo in manpage
-      
+    
       Fix a typo in manpage of aplay.
     - Don't show invalid plug example in the error message of aplay
-      
+    
       Don't show invalid examples of usage with plug prefix
       in the error message of aplay/arecord.
     - alternative peak meter for aplay
       From: Dirk Jagdmann <doj@cubic.org>
-      
+    
       This patch adds an alternative peak meter for aplay/arecord which is
       enabled via three "-v" command line arguments. This new mode differs
       from the old in a larger meter, no linefeeds for every meter update and
       a static maximum peak (for 1s).
     - split interleaved files in arecord when reaching 2GB
       From: Dirk Jagdmann <doj@cubic.org>
-      
+    
       This patch will split files in chunks of aprox. 2GB in the interleaved
       recording mode of arecord. This is meant to overcome the 2GB filesize
       limit of .wav files, which is easily reached when recording multiple

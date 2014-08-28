@@ -1,4 +1,3 @@
-aseqnet_manpage_errors.patch
-spelling_fixes.patch
-fix_misspelling_speaker-test_man_page.patch
-udev_test_alsactl.patch
+alsactl_home.patch
+systemd_restore_condition.patch
+systemd_standardoutput.patch

@@ -1,10 +1,12 @@
 #!/usr/bin/make -f
 %:
-	dh $@
+	dh $@ --with autoreconf
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
 			--with-asound-state-dir=/var/lib/alsa \
+			--with-alsactl-home-dir=/var/run/alsa \
+			--with-systemdsystemunitdir=/lib/systemd/system \
 			--disable-alsaconf
 
 override_dh_auto_install:
@@ -18,4 +20,4 @@ override_dh_installchangelogs:
 	dh_installchangelogs debian/changelog.ALSA
 
 override_dh_installinit:
-	DH_OPTIONS= dh_installinit --no-start -- start 50 S . stop 50 0 1 6 .
+	dh_installinit --no-start

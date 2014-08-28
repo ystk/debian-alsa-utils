@@ -1,0 +1,28 @@
+Author: Jordi Mallach <jordi@debian.org>
+Description: Check for the existance of the state file before doing anything.
+Forwarded: no
+
+Index: alsa-utils-1.0.28/alsactl/Makefile.am
+===================================================================
+--- alsa-utils-1.0.28.orig/alsactl/Makefile.am
++++ alsa-utils-1.0.28/alsactl/Makefile.am
+@@ -45,6 +45,7 @@ endif
+ edit = \
+ 	$(SED) -r -e 's,@sbindir\@,$(sbindir),g' \
+ 		  -e 's,@mydatadir\@,$(mydatadir),g' \
++		  -e 's,@asoundstatedir\@,$(ASOUND_STATE_DIR),g' \
+ 		  -e 's,@alsactlhome\@,$(ALSACTL_HOME_DIR),g' \
+ 		  -e 's,@daemonswitch\@,$(ALSACTL_DAEMONSWITCH),g' \
+ 							< $< > $@ || rm $@
+Index: alsa-utils-1.0.28/alsactl/alsa-restore.service.in
+===================================================================
+--- alsa-utils-1.0.28.orig/alsactl/alsa-restore.service.in
++++ alsa-utils-1.0.28/alsactl/alsa-restore.service.in
+@@ -6,6 +6,7 @@
+ [Unit]
+ Description=Restore Sound Card State
+ ConditionPathExists=!@daemonswitch@
++ConditionPathExists=@asoundstatedir@/asound.state
+ DefaultDependencies=no
+ After=alsa-state.service
+ Before=shutdown.target

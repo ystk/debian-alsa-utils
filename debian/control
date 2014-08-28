@@ -6,32 +6,40 @@ Uploaders: Jordi Mallach <jordi@debian.org>,
            Elimar Riesebieter <riesebie@lxtec.de>
 Build-Depends: autotools-dev,
                debhelper (>= 9),
-               libasound2-dev (>= 1.0.25),
+               dh-autoreconf,
+               autopoint,
+               libasound2-dev (>= 1.0.27),
                libncursesw5-dev,
                libsamplerate-dev,
+               pkg-config,
                xmlto
-Standards-Version: 3.9.3
+Standards-Version: 3.9.5
 Homepage: http://www.alsa-project.org/
 Vcs-Svn: svn://anonscm.debian.org/pkg-alsa/trunk/alsa-utils
 Vcs-Browser: http://anonscm.debian.org/viewvc/pkg-alsa/trunk/alsa-utils/
 
 Package: alsa-utils
 Architecture: linux-any
+Multi-Arch: foreign
 Provides: audio-mixer
 Depends: lsb-base (>= 3.0-9),
-         kmod,
+         kmod (>= 17-1~),
          whiptail | dialog,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: alsa-base (>= 1.0.15), pciutils
 Description: Utilities for configuring and using ALSA
  Included tools:
-  - amixer: command line mixer
+  - alsactl: advanced controls for ALSA sound drivers
+  - alsaloop: create loopbacks between PCM capture and playback devices
   - alsamixer: curses mixer
+  - alsaucm: alsa use case manager
+  - amixer: command line mixer
   - amidi: read from and write to ALSA RawMIDI ports
   - aplay, arecord: command line playback and recording
   - aplaymidi, arecordmidi: command line MIDI playback and recording
   - aconnect, aseqnet, aseqdump: command line MIDI sequencer control
+  - iecset: set or dump IEC958 status bits
+  - speaker-test: speaker test tone generator
  .
  ALSA is the Advanced Linux Sound Architecture.
 

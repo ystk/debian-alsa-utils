@@ -1,3 +1,99 @@
+alsa-utils (1.0.28-1) unstable; urgency=medium
+
+  [ Luke Yelavich ]
+  * New upstream release
+  * Dropped patches, applied upstream:
+    - aplay_fix_off_by_one_errors.patch
+    - systemd_service_typo.patch
+  * Refreshed patches:
+    - alsactl_home.patch
+    - systemd_restore_condition.patch
+
+  [ Jordi Mallach ]
+  * Drop Recommends on alsa-base and tighten kmod dependency to >= 17-1~
+    (closes: #747074).
+  * Bump Standards-Version to 3.9.5 (no changes needed).
+  * New patch systemd_standardoutput.patch: do not define StandardOutput,
+    just rely on the system's configured output (closes: #741123).
+
+ -- Jordi Mallach <jordi@debian.org>  Fri, 04 Jul 2014 20:06:25 +0100
+
+alsa-utils (1.0.27.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Drop all patches: all were git cherrypicks.
+  * Add aplay_fix_off_by_one_errors.patch from git: fix two off by one
+    errors in aplay that prevented usage of the last available sample format.
+  * Add systemd_service_typo.patch from git: fix typo in service file.
+  * Add alsactl_home.patch: Add a new configure switch that allows one to
+    configure the value of $HOME for alsactl invocations.
+  * Pass --with-alsactl-home-dir=/var/run/alsa to configure, to avoid
+    autospawned pulseaudio littering / (closes: #712980).
+  * Hardcode the same in the sysvinit script.
+  * Add systemd_restore_condition.patch: Check for the existance of the
+    asound.state file before trying to restore anything.
+
+ -- Jordi Mallach <jordi@debian.org>  Sat, 19 Oct 2013 12:11:26 +0200
+
+alsa-utils (1.0.27.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Drop all patches: all applied upstream.
+  * Add fix_hctl_elem_search.patch from git: fix hctl searching in amixer
+    (closes: #710059)
+  * Add revert_removal_udev_rules.patch: revert erroneous removal of udev
+    rules from the tarball.
+  * Build-Depend on and use dh-autoreconf and autopoint for the above change.
+  * Mark alsa-utils Multi-Arch: foreign (closes: #710185).
+
+ -- Jordi Mallach <jordi@debian.org>  Wed, 29 May 2013 12:16:24 +0200
+
+alsa-utils (1.0.27-3) unstable; urgency=low
+
+  * alsa-restore_service_improvements.patch: dropped. Our assumption was
+    wrong and there's nothing to fix.
+  * Rebuilding against current alsa-lib fixes alsa-utils-udeb dependencies
+    (closes: #708353).
+  * Mark all patches as forwarded and applied.
+
+ -- Jordi Mallach <jordi@debian.org>  Fri, 17 May 2013 14:10:42 +0200
+
+alsa-utils (1.0.27-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * Include all included programs in alsa-utils' description.
+
+ -- Jordi Mallach <jordi@debian.org>  Thu, 09 May 2013 12:58:00 +0200
+
+alsa-utils (1.0.27-1) experimental; urgency=low
+
+  * New upstream release.
+  * Bump libasound2-dev requirement to 1.0.27, for snd_pcm_abort().
+  * Pass --with-systemdsystemunitdir=/lib/systemd/system to configure.
+  * Drop udev_test_alsactl.patch: obsolete.
+  * Don't call dh_installinit with static runlevel info. This is all
+    managed via the LSB headers in the init script.
+  * Add utils_ftbfs_format-security_fix.patch: fix a format-string FTBFS.
+  * Add alsa-restore_typo.patch: from Git; fix typo oneshop → oneshot.
+  * Add alsa-restore_service_improvements.patch: start restore after
+    sysinit, to ensure it's run after local-fs.target.
+  * Add alsactl_lock_underflow.patch: from Git; fix underflow in alsactl.
+  * Add manpage_fixes.patch: formatting and spelling fixes (lintian).
+  * Use default compression for source package.
+  * Drop pciutils recommends, it was needed for alsaconf.
+
+ -- Jordi Mallach <jordi@debian.org>  Sat, 04 May 2013 01:39:32 +0200
+
+alsa-utils (1.0.26-1) experimental; urgency=low
+
+  * New upstream release.
+    - fixes typos in aplay's manpage (closes: #658762).
+  * Drop aseqnet_manpage_errors.patch, applied upstream.
+  * Build-Depend on pkg-config, for improved ncurses test (closes: #695316).
+  * Bump Standards-Version to 3.9.4, with no changes needed.
+
+ -- Jordi Mallach <jordi@debian.org>  Mon, 01 Apr 2013 23:02:11 -0500
+
 alsa-utils (1.0.25-4) unstable; urgency=low
 
   * Remove debian/set-default-soundcard which hasn't been installed since
