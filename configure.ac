@@ -1,8 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT(aplay/aplay.c)
+AC_INIT(alsa-utils, 1.0.28)
+AC_CONFIG_SRCDIR([aplay/aplay.c])
 AC_PREFIX_DEFAULT(/usr)
-AM_INIT_AUTOMAKE(alsa-utils, 1.0.25)
+AM_INIT_AUTOMAKE
+
+AM_MAINTAINER_MODE([enable])
 
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.15])
@@ -29,9 +32,12 @@ AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 AC_PROG_LN_S
 AC_PROG_SED
-AM_PATH_ALSA(1.0.24)
+PKG_PROG_PKG_CONFIG
+AM_PATH_ALSA(1.0.27)
+if test "x$enable_alsatest" = "xyes"; then
 AC_CHECK_FUNC([snd_ctl_elem_add_enumerated],
 	      , [AC_ERROR([No user enum control support in alsa-lib])])
+fi
 
 dnl Check components
 AC_CHECK_HEADERS([alsa/pcm.h], [have_pcm="yes"], [have_pcm="no"],
@@ -75,7 +81,7 @@ CURSES_CFLAGS=""
 alsamixer=
 if test "$have_mixer" = "yes"; then
 AC_ARG_ENABLE(alsamixer,
-     [  --disable-alsamixer     Disable alsamixer compilation],
+     AS_HELP_STRING([--disable-alsamixer], [Disable alsamixer compilation]),
      [case "${enableval}" in
        yes) alsamixer=true ;;
        no)  alsamixer=false ;;
@@ -86,7 +92,7 @@ AM_CONDITIONAL(ALSAMIXER, test x$alsamixer = xtrue)
 
 dnl Disable alsaconf
 AC_ARG_ENABLE(alsaconf,
-     [  --disable-alsaconf      Disable alsaconf packaging],
+     AS_HELP_STRING([--disable-alsaconf], [Disable alsaconf packaging]),
      [case "${enableval}" in
        yes) alsaconf=true ;;
        no)  alsaconf=false ;;
@@ -96,7 +102,7 @@ AM_CONDITIONAL(ALSACONF, test x$alsaconf = xtrue)
 
 dnl Disable alsaloop
 AC_ARG_ENABLE(alsaloop,
-     [  --disable-alsaloop      Disable alsaloop packaging],
+     AS_HELP_STRING([--disable-alsaloop], [Disable alsaloop packaging]),
      [case "${enableval}" in
        yes) alsaloop=true ;;
        no)  alsaloop=false ;;
@@ -115,49 +121,73 @@ AM_CONDITIONAL(USE_XMLTO, test x"$xmlto" = xyes)
 
 AC_ARG_WITH(
         [udev-rules-dir],
-        AS_HELP_STRING([--with-udev-rules-dir],[Directory where to install udev rules to (defaults to /lib/udev/rules.d)]),
-        [udevrulesdir=$withval], [udevrulesdir="/lib/udev/rules.d"])
+        AS_HELP_STRING([--with-udev-rules-dir=DIR],[Directory where to install udev rules to (default=auto)]),
+        [udevrulesdir="$withval"],
+        [udevdir=$($PKG_CONFIG udev --variable=udevdir)
+        if test "x$udevdir" = "x"; then
+            udevrulesdir="/lib/udev/rules.d"
+        else
+            udevrulesdir="$udevdir/rules.d"
+        fi])
 AC_SUBST(udevrulesdir)
 
 dnl Checks for header files.
 AC_HEADER_STDC
 if test x$alsamixer = xtrue; then
   AC_ARG_WITH(curses,
-    [  --with-curses libname   Specify the curses library to use (default=auto)],
+    AS_HELP_STRING([--with-curses=libname], [Specify the curses library to use (default=auto)]),
     curseslib="$withval",
     curseslib="auto")
   CURSESLIBDIR=""
   NCURSESLIBSUFFIX=""
   CURSES_NLS="no"
   if test "$curseslib" = "ncursesw" -o \( "$curseslib" = "auto" -a "$USE_NLS" = "yes" \); then
-    AC_CHECK_PROG([ncursesw5_config], [ncursesw5-config], [yes])
-    if test "$ncursesw5_config" = "yes"; then
-      CURSESINC="<ncurses.h>"
-      CURSESLIB=`ncursesw5-config --libs`
-      CURSESLIBDIR=`ncursesw5-config --libdir`
-      CURSES_CFLAGS=`ncursesw5-config --cflags`
-      curseslib="ncursesw"
-    else
-      AC_CHECK_LIB(ncursesw, initscr,
-                 [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncursesw'; curseslib="ncursesw"])
-    fi
+    dnl First try out pkg-config, then fall back to old config scripts.
+    PKG_CHECK_MODULES([NCURSESW], [ncursesw], [
+        CURSESINC="<ncurses.h>"
+        CURSESLIB="${NCURSESW_LIBS}"
+        CURSESLIBDIR=
+        CURSES_CFLAGS="${NCURSESW_CFLAGS}"
+        curseslib="ncursesw"
+      ], [
+        AC_CHECK_PROG([ncursesw5_config], [ncursesw5-config], [yes])
+        if test "$ncursesw5_config" = "yes"; then
+          CURSESINC="<ncurses.h>"
+          CURSESLIB=`ncursesw5-config --libs`
+          CURSESLIBDIR=`ncursesw5-config --libdir`
+          CURSES_CFLAGS=`ncursesw5-config --cflags`
+          curseslib="ncursesw"
+        else
+          AC_CHECK_LIB(ncursesw, initscr,
+                     [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncursesw'; curseslib="ncursesw"])
+        fi
+      ])
     if test -n "$CURSESINC"; then
       NCURSESLIBSUFFIX="w"
       CURSES_NLS="yes"
     fi
   fi
   if test "$curseslib" = "ncurses" -o "$curseslib" = "auto"; then
-    AC_CHECK_PROG([ncurses5_config], [ncurses5-config], [yes])
-    if test "$ncurses5_config" = "yes"; then
-      CURSESINC="<ncurses.h>"
-      CURSESLIB=`ncurses5-config --libs`
-      CURSESLIBDIR=`ncurses5-config --libdir`
-      CURSES_CFLAGS=`ncurses5-config --cflags`
-      curseslib="ncurses"
-    else
-      AC_CHECK_LIB(ncurses, initscr,
-                 [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncurses'; curseslib="ncurses"])
-    fi
+    dnl First try out pkg-config, then fall back to old config scripts.
+    PKG_CHECK_MODULES([NCURSES], [ncurses], [
+        CURSESINC="<ncurses.h>"
+        CURSESLIB="${NCURSES_LIBS}"
+        CURSESLIBDIR=
+        CURSES_CFLAGS="${NCURSES_CFLAGS}"
+        curseslib="ncurses"
+      ], [
+        AC_CHECK_PROG([ncurses5_config], [ncurses5-config], [yes])
+        if test "$ncurses5_config" = "yes"; then
+          CURSESINC="<ncurses.h>"
+          CURSESLIB=`ncurses5-config --libs`
+          CURSESLIBDIR=`ncurses5-config --libdir`
+          CURSES_CFLAGS=`ncurses5-config --cflags`
+          curseslib="ncurses"
+        else
+          AC_CHECK_LIB(ncurses, initscr,
+                     [ CURSESINC='<ncurses.h>'; CURSESLIB='-lncurses'; curseslib="ncurses"])
+        fi
+      ])
   fi
   if test "$curseslib" = "curses" -o "$curseslib" = "auto"; then
     AC_CHECK_LIB(curses, initscr,
@@ -262,14 +292,15 @@ AC_DEFINE_UNQUOTED(SOUNDSDIR, "$soundsdir", [directory containing sample data])
 
 mydatadir="$dir/alsa"
 AC_DEFINE_UNQUOTED(DATADIR, "$mydatadir", [directory containing alsa configuration])
+AC_SUBST(mydatadir)
 
 AC_ARG_WITH(testsound,
-  [  --with-testsound=file        give the path of test sound file for alsaconf],
+  AS_HELP_STRING([--with-testsound=file], [give the path of test sound file for alsaconf]),
   TESTSOUND="$withval",
   TESTSOUND="$dir/test.wav")
 AC_SUBST(TESTSOUND)
 
-AM_CONFIG_HEADER(include/aconfig.h)
+AC_CONFIG_HEADERS(include/aconfig.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -287,7 +318,6 @@ SAVE_UTIL_VERSION
 AC_SUBST(LIBRT)
 
 dnl Check for systemd
-PKG_PROG_PKG_CONFIG
 AC_ARG_WITH([systemdsystemunitdir],
         AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
         [], [with_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir systemd)])
@@ -301,6 +331,24 @@ AC_ARG_WITH([asound-state-dir],
         [ASOUND_STATE_DIR="$withval"],
         [ASOUND_STATE_DIR="/var/lib/alsa"])
 AC_SUBST(ASOUND_STATE_DIR)
+
+AC_ARG_WITH([alsactl-lock-dir],
+        AS_HELP_STRING([--with-alsactl-lock-dir=DIR], [Directory to place lock files in]),
+        [ASOUND_LOCK_DIR="$withval"],
+        [ASOUND_LOCK_DIR="/var/lock"])
+AC_SUBST(ASOUND_LOCK_DIR)
+
+AC_ARG_WITH([alsactl-pidfile-dir],
+        AS_HELP_STRING([--with-alsactl-pidfile-dir=DIR], [Directory to place alsactl.pid file in]),
+        [ALSACTL_PIDFILE_DIR="$withval"],
+        [ALSACTL_PIDFILE_DIR="/var/run"])
+AC_SUBST(ALSACTL_PIDFILE_DIR)
+
+AC_ARG_WITH([alsactl-daemonswitch],
+        AS_HELP_STRING([--with-alsactl-daemonswitch=FILE], [File to test for the daemon mode]),
+        [ALSACTL_DAEMONSWITCH="$withval"],
+        [ALSACTL_DAEMONSWITCH="/etc/alsa/state-daemon.conf"])
+AC_SUBST(ALSACTL_DAEMONSWITCH)
 
 AC_OUTPUT(Makefile alsactl/Makefile alsactl/init/Makefile \
 	  alsamixer/Makefile amidi/Makefile amixer/Makefile \

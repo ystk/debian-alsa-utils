@@ -62,11 +62,22 @@ static const char *src_types[] = {
 };
 #endif
 
-static pthread_mutex_t pcm_open_mutex =
-                                PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+static pthread_once_t pcm_open_mutex_once = PTHREAD_ONCE_INIT;
+static pthread_mutex_t pcm_open_mutex;
+
+static void pcm_open_init_mutex(void)
+{
+	pthread_mutexattr_t attr;
+
+	pthread_mutexattr_init(&attr);
+	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+	pthread_mutex_init(&pcm_open_mutex, &attr);
+	pthread_mutexattr_destroy(&attr);
+}
 
 static inline void pcm_open_lock(void)
 {
+	pthread_once(&pcm_open_mutex_once, pcm_open_init_mutex);
 	if (workarounds & WORKAROUND_SERIALOPEN)
 	        pthread_mutex_lock(&pcm_open_mutex);
 }
@@ -246,15 +257,11 @@ static int setparams_set(struct loopback_handle *lhandle,
 	} else {
 		if (lhandle == lhandle->loopback->play) {
 			val = bufsize + bufsize / 2;
-			if (val < (period_size * 3) / 4)
-				val = (period_size * 3) / 4;
 			if (val > (buffer_size * 3) / 4)
 				val = (buffer_size * 3) / 4;
 			val = buffer_size - val;
 		} else {
 			val = bufsize / 2;
-			if (val < period_size / 2)
-				val = period_size / 2;
 			if (val > buffer_size / 4)
 				val = buffer_size / 4;
 		}
@@ -949,6 +956,23 @@ static int xrun_sync(struct loopback *loop)
 			logit(LOG_CRIT, "%s start failed: %s\n", play->id, snd_strerror(err));
 			return err;
 		}
+	} else if (delay1 < fill) {
+		diff = (fill - delay1) / play->pitch;
+		while (diff > 0) {
+			delay1 = play->buf_size - play->buf_pos;
+			if (verbose > 6)
+				snd_output_printf(loop->output,
+					"sync: playback short, silence filling %li / buf_count=%li\n", (long)delay1, play->buf_count);
+			if (delay1 > diff)
+				delay1 = diff;
+			if ((err = snd_pcm_format_set_silence(play->format, play->buf + play->buf_pos * play->channels, delay1)) < 0)
+				return err;
+			play->buf_pos += delay1;
+			play->buf_pos %= play->buf_size;
+			play->buf_count += delay1;
+			diff -= delay1;
+		}
+		writeit(play);
 	}
 	if (verbose > 5) {
 		snd_output_printf(loop->output, "%s: xrun sync ok\n", loop->id);
